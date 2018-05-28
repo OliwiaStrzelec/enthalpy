@@ -13,32 +13,50 @@
 
 </div>
 
-<form class="m-5" name="form" action="#" th:action="@{/}" th:object="${form}" method="post">
+<form class="m-5" th:action="@{/file}" method="POST" enctype="multipart/form-data">
+    <div class="input-group mb-3 pb-3 border-bottom">
+        <div class="form-group mb-6">
+            <label for="rowsToSkip">Ile wierszy pominąć</label>
+            <input name="rowsToSkip" id="rowsToSkip" type="number" class="form-control" placeholder="Ile wierszy pominąć" required="required">
+        </div>
+        <div class="custom-file form-group mb-12">
+            <input type="file" name="file" class="custom-file-input" id="file">
+            <label class="custom-file-label" for="file" value="Wybierz plik"></label>
+        </div>
+        <div class="form-group">
+            <center><button class="btn btn-outline-secondary" type="submit">Wyślij</button></center>
+        </div>
+    </div>
+
+</form>
+
+<form class="m-5" name="form" th:action="@{/}" th:object="${form}" method="post">
     <div class="row mb-3 pb-3 border-bottom">
-        <div class="col lg-4">
+        <div class="col lg-3">
             <label for="startTemp">Temperatura początkowa</label>
             <input th:field="*{tempStart}" id="startTemp" type="number" class="form-control" placeholder="Początek" th:errorClass="error" required="required">
             <small class="text-dark" th:if="${#fields.hasErrors('tempStart')}" th:errors="*{tempStart}"></small>
         </div>
-        <div class="col lg-4">
+        <div class="col lg-3">
             <label for="endTemp">Temperatura końcowa</label>
             <input th:field="*{tempEnd}" id="endTemp" type="number" class="form-control" placeholder="Koniec" th:errorClass="error" required="required">
             <small class="text-dark" th:if="${#fields.hasErrors('tempEnd')}" th:errors="*{tempEnd}"></small>
         </div>
-        <div class="col lg-4">
+        <div class="col lg-3">
             <label for="enthalpy">Entalpia przemiany</label>
             <input th:field="*{H}" id="enthalpy" type="number" class="form-control" placeholder="Entalpia" th:errorClass="error" required="required">
             <small class="text-dark" th:if="${#fields.hasErrors('H')}" th:errors="*{H}"></small>
         </div>
-        <div class="col lg-4">
+        <div class="col lg-3">
             <label for="inputState">Funkcja</label>
             <select th:field="*{function}" id="inputState" class="form-control">
                 <option value="linear" selected>Liniowa</option>
                 <option value="exponential">Wykładnicza</option>
+                <option value="jump">Skok jednostkowy</option>
             </select>
         </div>
     </div>
-    <center><button type="submit" class="btn btn-outline-success">Dodaj</button></center>
+    <center><button type="submit" class="btn btn-outline-secondary">Dodaj</button></center>
 </form>
 
 <footer class="bg-secondary py-5">

@@ -45,6 +45,9 @@ public class Enthalpy {
         if(function.equals("exponential")){
             transitionVector.exponential(H);
         }
+        if(function.equals("jump")){
+            transitionVector.jump(H);
+        }
         return transitionVector;
     }
 

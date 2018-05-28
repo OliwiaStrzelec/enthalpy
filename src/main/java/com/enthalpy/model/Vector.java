@@ -129,10 +129,13 @@ public class Vector {
         }
     }
 
+    public void jump(double H) {
+        int i = (int)this.enthalpy.size()/2;
+        enthalpy.set(i, enthalpy.get(i) + H);
+    }
 
     public void exponential(double H) {
         double partialH = H/2;
-        double check = 0.;
         for (int i = 0; i < this.enthalpy.size() - 1; i++){
             enthalpy.set(i, enthalpy.get(i) + partialH);
             partialH /= 2;
@@ -155,8 +158,7 @@ public class Vector {
         return this;
     }
 
-    public static Vector getTemperatureAndCp(String path, int rowsToSkip) {
-        Scanner scanner = getScanner(path);
+    public static Vector getTemperatureAndCp(Scanner scanner, int rowsToSkip) {
         int i = 0;
         List<Double> temperature = new ArrayList<>();
         List<Double> cp = new ArrayList<Double>();
@@ -174,7 +176,7 @@ public class Vector {
         return new Vector(temperature, cp);
     }
 
-    private static Scanner getScanner(String path) {
+    public static Scanner getScanner(String path) {
         Scanner scanner = null;
         try {
             scanner = new Scanner(new FileReader(path));

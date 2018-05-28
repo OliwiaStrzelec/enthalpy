@@ -14,7 +14,8 @@ public class Main {
         //Pobieram dane z pliku
         String path = new File("src/main/resources/static/Specific_Heat.txt").getAbsolutePath();
         //Tworzę wektor z danych z pliku
-        Vector vector = Vector.getTemperatureAndCp(path, 5);
+        Scanner scanner = Vector.getScanner(path);
+        Vector vector = Vector.getTemperatureAndCp(scanner, 5);
         //Drukuję początkowy wektor
         System.out.println("Wektor początkowy");
         vector.printVector();
