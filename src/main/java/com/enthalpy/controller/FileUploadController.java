@@ -40,11 +40,12 @@ public class FileUploadController {
     @PostMapping("/file")
     public String handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam int rowsToSkip, RedirectAttributes redirectAttributes) {
         storageService.store(file);
+        System.out.println(rowsToSkip);
         try {
             File storedFile = storageService.loadAsResource(file.getOriginalFilename()).getFile();
             Scanner scanner = new Scanner(storedFile);
             System.out.println(storedFile.getName());
-            Vector vector = Vector.getTemperatureAndCp(scanner, rowsToSkip);
+            Vector vector = Vector.getTemperatureAndCp(scanner, 5);
             vector.printVector();
         } catch (IOException e) {
             e.printStackTrace();

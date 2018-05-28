@@ -6,49 +6,50 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <title>Entalpia</title>
     <link rel="stylesheet" th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css}" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+    <link rel="stylesheet" th:href="@{../blog.css}" href="blog.css"/>
 </head>
 <body class="bg-light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+
 <div>
-    <!--Tutaj miejsce na wykresy-->
 
 </div>
 
-<form class="m-5 container" th:action="@{/file}" method="POST" enctype="multipart/form-data">
-    <div class="mb-3 pb-3 border-bottom row">
-        <div class="form-group col-12">
+<form class="m-5" th:action="@{/file}" method="POST" enctype="multipart/form-data">
+    <div class="input-group mb-3 pb-3 border-bottom">
+        <div class="form-group mb-6">
             <label for="rowsToSkip">Ile wierszy pominąć</label>
-            <input name="rowsToSkip" id="rowsToSkip" type="number" min="0" class="form-control" placeholder="Ile wierszy pominąć" required="required">
+            <input name="rowsToSkip" id="rowsToSkip" type="number" class="form-control" placeholder="Ile wierszy pominąć" required="required">
         </div>
-        <div class="form-group col-12">
-        <label for="file">Dane do wykresów</label>
-        <input type="file" name="file" class="form-control-file" id="file" aria-describedby="fileHelp">
-        <small id="fileHelp" class="form-text text-muted">Proszę załączyć plik .txt, z temperaturą w pierwszej kolumnie i ciepłem własciwym w drugiej.</small>
-    </div>
-        <div class="form-group col-12">
+        <div class="custom-file form-group mb-12">
+            <input type="file" name="file" class="custom-file-input" id="file">
+            <label class="custom-file-label" for="file" value="Wybierz plik"></label>
+        </div>
+        <div class="form-group">
             <center><button class="btn btn-outline-secondary" type="submit">Wyślij</button></center>
         </div>
     </div>
 
 </form>
 
-<form class="m-5 container" name="form" th:action="@{/}" th:object="${form}" method="post">
-    <div class="row mb-3 pb-3 border-bottom row">
-        <div class="col-lg-3 col-12">
+<form class="m-5" name="form" th:action="@{/}" th:object="${form}" method="post">
+    <div class="row mb-3 pb-3 border-bottom">
+        <div class="col lg-3">
             <label for="startTemp">Temperatura początkowa</label>
             <input th:field="*{tempStart}" id="startTemp" type="number" class="form-control" placeholder="Początek" th:errorClass="error" required="required">
             <small class="text-dark" th:if="${#fields.hasErrors('tempStart')}" th:errors="*{tempStart}"></small>
         </div>
-        <div class="col-lg-3 col-12">
+        <div class="col lg-3">
             <label for="endTemp">Temperatura końcowa</label>
             <input th:field="*{tempEnd}" id="endTemp" type="number" class="form-control" placeholder="Koniec" th:errorClass="error" required="required">
             <small class="text-dark" th:if="${#fields.hasErrors('tempEnd')}" th:errors="*{tempEnd}"></small>
         </div>
-        <div class="col-lg-3 col-12">
+        <div class="col lg-3">
             <label for="enthalpy">Entalpia przemiany</label>
             <input th:field="*{H}" id="enthalpy" type="number" class="form-control" placeholder="Entalpia" th:errorClass="error" required="required">
             <small class="text-dark" th:if="${#fields.hasErrors('H')}" th:errors="*{H}"></small>
         </div>
-        <div class="col-lg-3 col-12">
+        <div class="col lg-3">
             <label for="inputState">Funkcja</label>
             <select th:field="*{function}" id="inputState" class="form-control">
                 <option value="linear" selected>Liniowa</option>
@@ -59,6 +60,55 @@
     </div>
     <center><button type="submit" class="btn btn-outline-secondary">Dodaj</button></center>
 </form>
+<canvas id="myChart"></canvas>
+
+<script th:temp="${tempJson}" th:enthalpy="${enthalpyJson}">
+var ctx = document.getElementById("myChart").getContext('2d');
+var temperature = document.currentScript.getAttribute('temp');
+var enthalpy = document.currentScript.getAttribute('enthalpy');
+
+var temperatureJSON = JSON.parse(temperature);
+var enthalpyJSON = JSON.parse(enthalpy);
+
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: temperatureJSON,
+        datasets: [{
+            label: 'Entalpia',
+            data: enthalpyJSON,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 0.2)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        title: {
+        text: 'wykres zależności entalpi od temperatury'
+    },
+        scales: {
+
+            yAxes: [{
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Temperatura'
+                },
+                ticks: {
+                    beginAtZero:true
+                }
+            }],
+            xAxes: [{
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Temperatura'
+                }
+            }]
+        }
+    }
+});
+</script>
+
+
 
 <footer class="bg-secondary py-5">
 

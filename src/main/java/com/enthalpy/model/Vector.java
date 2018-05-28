@@ -1,5 +1,6 @@
 package com.enthalpy.model;
 
+import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -185,5 +186,16 @@ public class Vector {
         }
         return scanner;
     }
+
+    public String getTemperatureAsJsonObject()
+    {
+        return new Gson().toJson(this.temperature);
+    }
+
+    public String getEnthalpyAsJsonObject()
+    {
+        return new Gson().toJson(this.enthalpy);
+    }
+
 
 }
