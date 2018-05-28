@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Entalpia</title>
+    <link rel="stylesheet" th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css}" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+    <link rel="stylesheet" th:href="@{../blog.css}" href="blog.css"/>
+</head>
+<body class="bg-light">
+<div>
+
+</div>
+
+<form class="m-5" name="form" action="#" th:action="@{/}" th:object="${form}" method="post">
+    <div class="row mb-3 pb-3 border-bottom">
+        <div class="col lg-4">
+            <label for="startTemp">Temperatura początkowa</label>
+            <input th:field="*{tempStart}" id="startTemp" type="number" class="form-control" placeholder="Początek" th:errorClass="error" required="required">
+            <small class="text-dark" th:if="${#fields.hasErrors('tempStart')}" th:errors="*{tempStart}"></small>
+        </div>
+        <div class="col lg-4">
+            <label for="endTemp">Temperatura końcowa</label>
+            <input th:field="*{tempEnd}" id="endTemp" type="number" class="form-control" placeholder="Koniec" th:errorClass="error" required="required">
+            <small class="text-dark" th:if="${#fields.hasErrors('tempEnd')}" th:errors="*{tempEnd}"></small>
+        </div>
+        <div class="col lg-4">
+            <label for="enthalpy">Entalpia przemiany</label>
+            <input th:field="*{H}" id="enthalpy" type="number" class="form-control" placeholder="Entalpia" th:errorClass="error" required="required">
+            <small class="text-dark" th:if="${#fields.hasErrors('H')}" th:errors="*{H}"></small>
+        </div>
+        <div class="col lg-4">
+            <label for="inputState">Funkcja</label>
+            <select th:field="*{function}" id="inputState" class="form-control">
+                <option value="linear" selected>Liniowa</option>
+                <option value="exponential">Wykładnicza</option>
+            </select>
+        </div>
+    </div>
+    <center><button type="submit" class="btn btn-outline-success">Dodaj</button></center>
+</form>
+
+<footer class="bg-secondary py-5">
+
+</footer>
+
+<script th:src="@{https://code.jquery.com/jquery-3.2.1.slim.min.js}" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js}" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script th:src="@{https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js}" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
