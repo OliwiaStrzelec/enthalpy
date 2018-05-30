@@ -123,25 +123,29 @@ public class Vector {
         return index;
     }
 
+    //TODO
     public void linear(double H) {
         double partialH = H / this.enthalpy.size();
         for (int i = 0; i < this.enthalpy.size(); i++) {
-            enthalpy.set(i, enthalpy.get(i) + partialH);
+            enthalpy.set(i, enthalpy.get(i) + (i + 1) * partialH);
         }
     }
 
     public void jump(double H) {
-        int i = (int)this.enthalpy.size()/2;
-        enthalpy.set(i, enthalpy.get(i) + H);
+        for(int i = (int)this.enthalpy.size()/2; i < this.enthalpy.size(); i++) {
+            enthalpy.set(i, enthalpy.get(i) + H);
+        }
     }
 
     public void exponential(double H) {
         double partialH = H/2;
+        double sum = partialH;
         for (int i = 0; i < this.enthalpy.size() - 1; i++){
-            enthalpy.set(i, enthalpy.get(i) + partialH);
+            enthalpy.set(i, enthalpy.get(i) + sum);
             partialH /= 2;
+            sum += partialH;
         }
-        enthalpy.set(this.enthalpy.size() - 1, enthalpy.get(this.enthalpy.size() - 1) + partialH);
+        enthalpy.set(this.enthalpy.size() - 1, enthalpy.get(this.enthalpy.size() - 1) + sum);
     }
 
     public List<Double> enthalpyVector(double tempStart, List<Double> tempDivisions, List<Double> cpVector) {

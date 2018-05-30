@@ -10,8 +10,9 @@
 <body class="bg-light">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 
-<div>
+<div class="m-5">
     <!--Tutaj miejsce na wykresy-->
+    <canvas id="myChart"></canvas>
 
 </div>
 
@@ -61,7 +62,6 @@
     </div>
     <center><button type="submit" class="btn btn-outline-secondary">Dodaj</button></center>
 </form>
-<canvas id="myChart"></canvas>
 
 <script th:temp="${tempJson}" th:enthalpy="${enthalpyJson}">
 var ctx = document.getElementById("myChart").getContext('2d');
@@ -92,7 +92,7 @@ var myChart = new Chart(ctx, {
             yAxes: [{
                 scaleLabel: {
                     display: true,
-                    labelString: 'Temperatura'
+                    labelString: 'Entalpia'
                 },
                 ticks: {
                     beginAtZero:true

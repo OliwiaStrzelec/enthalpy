@@ -31,6 +31,8 @@ public class MainController {
     public String getIndexPage(@ModelAttribute TransitionForm form, Model model){
         model.addAttribute("form", form);
         model.addAttribute("vector", vector);
+        model.addAttribute("tempJson", vector.getTemperatureAsJsonObject());
+        model.addAttribute("enthalpyJson", vector.getEnthalpyAsJsonObject());
         return "index";
     }
 
@@ -48,6 +50,7 @@ public class MainController {
 
         Vector transitionVector = Enthalpy.transitionVector(vector, form.getTempStart(), form.getTempEnd(), form.getH(), form.getFunction());
         transitionVector.printVector();
+        vector.insertVector(vector.getIndex(form.getTempStart()), vector.getIndex(form.getTempEnd()), transitionVector);
         model.addAttribute("tempJson", vector.getTemperatureAsJsonObject());
         model.addAttribute("enthalpyJson", vector.getEnthalpyAsJsonObject());
         model.addAttribute("form", form);

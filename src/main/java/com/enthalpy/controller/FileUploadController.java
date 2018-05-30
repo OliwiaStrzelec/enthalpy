@@ -38,7 +38,7 @@ public class FileUploadController {
     }
 
     @PostMapping("/file")
-    public String handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam int rowsToSkip, RedirectAttributes redirectAttributes) {
+    public String handleFileUpload(Model model, @RequestParam("file") MultipartFile file, @RequestParam int rowsToSkip, RedirectAttributes redirectAttributes) {
         storageService.store(file);
         try {
             File storedFile = storageService.loadAsResource(file.getOriginalFilename()).getFile();
@@ -46,6 +46,8 @@ public class FileUploadController {
             System.out.println(storedFile.getName());
             Vector vector = Vector.getTemperatureAndCp(scanner, rowsToSkip);
             vector.printVector();
+            model.addAttribute("tempJson", vector.getTemperatureAsJsonObject());
+            model.addAttribute("enthalpyJson", vector.getEnthalpyAsJsonObject());
         } catch (IOException e) {
             e.printStackTrace();
         }
