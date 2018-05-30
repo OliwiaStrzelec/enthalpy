@@ -8,6 +8,8 @@
     <link rel="stylesheet" th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css}" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
 </head>
 <body class="bg-light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+
 <div>
     <!--Tutaj miejsce na wykresy-->
 
@@ -59,6 +61,55 @@
     </div>
     <center><button type="submit" class="btn btn-outline-secondary">Dodaj</button></center>
 </form>
+<canvas id="myChart"></canvas>
+
+<script th:temp="${tempJson}" th:enthalpy="${enthalpyJson}">
+var ctx = document.getElementById("myChart").getContext('2d');
+var temperature = document.currentScript.getAttribute('temp');
+var enthalpy = document.currentScript.getAttribute('enthalpy');
+
+var temperatureJSON = JSON.parse(temperature);
+var enthalpyJSON = JSON.parse(enthalpy);
+
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: temperatureJSON,
+        datasets: [{
+            label: 'Entalpia',
+            data: enthalpyJSON,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 0.2)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        title: {
+        text: 'wykres zależności entalpi od temperatury'
+    },
+        scales: {
+
+            yAxes: [{
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Temperatura'
+                },
+                ticks: {
+                    beginAtZero:true
+                }
+            }],
+            xAxes: [{
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Temperatura'
+                }
+            }]
+        }
+    }
+});
+</script>
+
+
 
 <footer class="bg-secondary py-5">
 

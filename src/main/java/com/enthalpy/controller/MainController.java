@@ -48,6 +48,8 @@ public class MainController {
 
         Vector transitionVector = Enthalpy.transitionVector(vector, form.getTempStart(), form.getTempEnd(), form.getH(), form.getFunction());
         transitionVector.printVector();
+        model.addAttribute("tempJson", vector.getTemperatureAsJsonObject());
+        model.addAttribute("enthalpyJson", vector.getEnthalpyAsJsonObject());
         model.addAttribute("form", form);
         model.addAttribute("vector", vector);
         System.out.println(form);
