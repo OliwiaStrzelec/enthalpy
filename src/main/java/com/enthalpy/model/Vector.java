@@ -201,5 +201,4 @@ public class Vector {
         return new Gson().toJson(this.enthalpy);
     }
 
-
 }
