@@ -122,6 +122,27 @@ public class Vector {
         }
         return index;
     }
+    public double lagrange( double arg)
+    {
+        double counted=0;
+        for (int i=0;i<this.temperature.size();i++)
+        {
+            double li=1;
+            for (int j=0;j<this.temperature.size();j++)
+            {
+
+                if (i!=j)
+                {
+                    li*=(arg-this.temperature.get(j))/(this.temperature.get(i)-this.temperature.get(j));
+
+                }
+            }
+            counted+=this.cp.get(i)*li;
+
+        }
+
+        return counted;
+    }
 
     //TODO
     public void linear(double H) {
