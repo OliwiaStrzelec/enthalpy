@@ -202,6 +202,26 @@ public class Vector {
         return new Vector(temperature, cp);
     }
 
+    public void applyLagrange()
+    {
+        List<Double> newtemp=new ArrayList<>();
+        List<Double> newcp = new ArrayList<>();
+
+        double temp=this.temperature.get(0);
+        while (temp<=this.temperature.get(this.temperature.size()-1))
+        {
+            newtemp.add(temp);
+            newcp.add(lagrange(temp));
+            temp=temp+1;
+        }
+        this.temperature=newtemp;
+        this.cp=newcp;
+        System.out.println(newcp.size());
+        System.out.println(newtemp.size());
+        countEnthalpy();
+        System.out.println(this.enthalpy.size());
+    }
+
     public static Scanner getScanner(String path) {
         Scanner scanner = null;
         try {

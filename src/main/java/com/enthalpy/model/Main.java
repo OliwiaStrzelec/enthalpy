@@ -20,7 +20,9 @@ public class Main {
         //Drukuję początkowy wektor
         System.out.println("Wektor początkowy");
         vector.printVector();
-
+        vector.applyLagrange();
+        System.out.println("Stosowanie lagrangea");
+        vector.printVector();
         double tempStart = 1420.;
         double tempEnd = 1460.;
         double H = 20.;
