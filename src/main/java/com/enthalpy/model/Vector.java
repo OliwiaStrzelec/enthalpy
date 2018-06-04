@@ -46,9 +46,13 @@ public class Vector {
                 this.enthalpy.add(i, this.cp.get(i) * this.temperature.get(i));
                 continue;
             }
-            Double ent = this.enthalpy.get(i - 1) + (this.temperature.get(i) - this.temperature.get(i - 1)) * (this.cp.get(i) + this.cp.get(i - 1)) / 2;
+            Double ent = countIndividualEnthalpy(i);
             this.enthalpy.add(i, ent);
         }
+    }
+
+    private Double countIndividualEnthalpy(int i) {
+        return this.enthalpy.get(i - 1) + (this.temperature.get(i) - this.temperature.get(i - 1)) * (this.cp.get(i) + this.cp.get(i - 1)) / 2;
     }
 
 
@@ -80,9 +84,9 @@ public class Vector {
 
     }
 
-    private void updateEnthalpy(int startIndex) {
+    public void updateEnthalpy(int startIndex) {
         for (int i = startIndex; i < enthalpy.size(); i++) {
-            Double ent = this.enthalpy.get(i - 1) + (this.temperature.get(i) - this.temperature.get(i - 1)) * (this.cp.get(i) + this.cp.get(i - 1)) / 2;
+            Double ent = countIndividualEnthalpy(i);
             this.enthalpy.set(i, ent);
         }
     }
@@ -111,57 +115,84 @@ public class Vector {
         }
         return index;
     }
-    public double lagrange(double arg, int index)
-    {
+
+    public double lagrange(double arg, int index) {
         List<Double> temp = new ArrayList<>();
         temp.add(this.temperature.get(index));
         temp.add(this.temperature.get(index + 1));
         List<Double> cp = new ArrayList<>();
         cp.add(this.cp.get(index));
         cp.add(this.cp.get(index + 1));
-        double counted=0;
-        for (int i=0;i<temp.size();i++)
-        {
-            double li=1;
-            for (int j=0;j<temp.size();j++)
-            {
+        double counted = 0;
+        for (int i = 0; i < temp.size(); i++) {
+            double li = 1;
+            for (int j = 0; j < temp.size(); j++) {
 
-                if (i!=j)
-                {
-                    li*=(arg-temp.get(j))/(temp.get(i)-temp.get(j));
+                if (i != j) {
+                    li *= (arg - temp.get(j)) / (temp.get(i) - temp.get(j));
 
                 }
             }
-            counted+=cp.get(i)*li;
+            counted += cp.get(i) * li;
 
         }
 
         return counted;
     }
 
-    //TODO
-    public void linear(double H) {
-        double partialH = H / this.enthalpy.size();
-        for (int i = 0; i < this.enthalpy.size(); i++) {
-            enthalpy.set(i, enthalpy.get(i) + (i + 1) * partialH);
+
+    private int getSimleIndex(double tempStart) {
+        return Collections.binarySearch(this.temperature, tempStart);
+    }
+
+    public void linear(double H, double tempStart, double tempEnd) {
+        int startIndex = getSimleIndex(tempStart);
+        int endIndex = (getSimleIndex(tempEnd));
+        int size = endIndex - startIndex;
+        double partialH = H / size;
+        for (int i = startIndex; i < endIndex; i++) {
+            if (i == 0) {
+                enthalpy.set(i, enthalpy.get(i) + partialH);
+                continue;
+            }
+            enthalpy.set(i, countIndividualEnthalpy(i) + partialH);
         }
+        this.updateEnthalpy(endIndex);
+    }
+
+    public void linear(double H) {
+        linear(H, temperature.get(0), temperature.get(this.enthalpy.size() - 1));
+    }
+
+
+    public void jump(double H, double tempStart, double tempEnd) {
+        int startIndex = (getSimleIndex(tempStart));
+        int endIndex = (getSimleIndex(tempEnd));
+        int index = startIndex + (endIndex - startIndex) / 2;
+        this.enthalpy.set(index, this.enthalpy.get(index) + H);
+        this.updateEnthalpy(index + 1);
     }
 
     public void jump(double H) {
-        for(int i = (int)this.enthalpy.size()/2; i < this.enthalpy.size(); i++) {
-            enthalpy.set(i, enthalpy.get(i) + H);
-        }
+        jump(H, temperature.get(0), temperature.get(this.enthalpy.size() - 1));
     }
 
-    public void exponential(double H) {
-        double partialH = H/2;
+
+    public void exponential(double H, double tempStart, double tempEnd) {
+        int startIndex = (getSimleIndex(tempStart));
+        int endIndex = (getSimleIndex(tempEnd));
+        double partialH = H / 2;
         double sum = partialH;
-        for (int i = 0; i < this.enthalpy.size() - 1; i++){
+        for (int i = startIndex; i < endIndex; i++) {
             enthalpy.set(i, enthalpy.get(i) + sum);
             partialH /= 2;
             sum += partialH;
         }
-        enthalpy.set(this.enthalpy.size() - 1, enthalpy.get(this.enthalpy.size() - 1) + sum);
+        enthalpy.set(endIndex, enthalpy.get(endIndex) + sum);
+    }
+
+    public void exponential(double H) {
+        exponential(H, temperature.get(0), temperature.get(this.enthalpy.size() - 1));
     }
 
     public List<Double> enthalpyVector(double tempStart, List<Double> tempDivisions, List<Double> cpVector) {
@@ -175,7 +206,7 @@ public class Vector {
         return enthalpyVector;
     }
 
-    public Vector clone(){
+    public Vector clone() {
         return this;
     }
 
@@ -197,20 +228,19 @@ public class Vector {
         return new Vector(temperature, cp);
     }
 
-    public void applyLagrange()
-    {
-        List<Double> newtemp=new ArrayList<>();
+    public void applyLagrange() {
+        List<Double> newtemp = new ArrayList<>();
         List<Double> newcp = new ArrayList<>();
-        for (int i=0;i<this.temperature.size();i++) {
+        for (int i = 0; i < this.temperature.size(); i++) {
             double temp = this.temperature.get(i);
-            while (temp < this.temperature.get(this.temperature.size() - 1) && temp <= this.temperature.get(i+1)) {
+            while (temp < this.temperature.get(this.temperature.size() - 1) && temp <= this.temperature.get(i + 1)) {
                 newtemp.add(temp);
-                newcp.add(lagrange(temp,i));
+                newcp.add(lagrange(temp, i));
                 temp = temp + 1;
             }
         }
-        this.temperature=newtemp;
-        this.cp=newcp;
+        this.temperature = newtemp;
+        this.cp = newcp;
     }
 
     public static Scanner getScanner(String path) {
@@ -223,13 +253,11 @@ public class Vector {
         return scanner;
     }
 
-    public String getTemperatureAsJsonObject()
-    {
+    public String getTemperatureAsJsonObject() {
         return new Gson().toJson(this.temperature);
     }
 
-    public String getEnthalpyAsJsonObject()
-    {
+    public String getEnthalpyAsJsonObject() {
         return new Gson().toJson(this.enthalpy);
     }
 

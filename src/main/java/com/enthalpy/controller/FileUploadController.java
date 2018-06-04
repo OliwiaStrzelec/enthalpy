@@ -81,7 +81,7 @@ public class FileUploadController {
     private void transition(TransitionForm form, Vector vector) {
         Vector transitionVector = Enthalpy.transitionVector(vector, form.getTempStart(), form.getTempEnd(), form.getH(), form.getFunction());
         transitionVector.printVector();
-        vector.insertVector(vector.getIndex(form.getTempStart()), vector.getIndex(form.getTempEnd()), transitionVector);
+        //vector.insertVector(vector.getIndex(form.getTempStart()), vector.getIndex(form.getTempEnd()), transitionVector);
     }
 
 
