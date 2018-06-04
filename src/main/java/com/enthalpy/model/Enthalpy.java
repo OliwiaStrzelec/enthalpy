@@ -22,40 +22,31 @@ public class Enthalpy {
         return true;
     }
 
-    public static List<Double> countTempDivisions(double tempStart, double tempEnd, double degrees) {
-        List<Double> temperature = new ArrayList<>();
-        double temp = tempStart;
-        while (temp < tempEnd) {
-            temperature.add(temp);
-            temp += degrees;
-        }
-        temperature.add(tempEnd);
-        return temperature;
-    }
-
     public static Vector transitionVector(Vector mainVector, double tempStart, double tempEnd, double H, String function) {
         if (!checkInput(tempStart, tempEnd, H)) {
             return null;
         }
-        double degrees = 2.;
-        Vector transitionVector = getTransitionVector(mainVector, tempEnd, degrees, tempStart);
-        if (function.equals("linear")) {
-            transitionVector.linear(H);
-        }
-        if(function.equals("exponential")){
-            transitionVector.exponential(H);
-        }
-        if(function.equals("jump")){
-            transitionVector.jump(H);
-        }
+        Vector transitionVector = getTransitionVector(mainVector, tempStart, tempEnd);
         return transitionVector;
+//        if (function.equals("linear")) {
+//            transitionVector.linear(H);
+//        }
+//        if(function.equals("exponential")){
+//            transitionVector.exponential(H);
+//        }
+//        if(function.equals("jump")){
+//            transitionVector.jump(H);
+//        }
+//        return transitionVector;
     }
 
-    private static Vector getTransitionVector(Vector mainVector, double tempEnd, double degrees, double tempStart) {
-        List<Double> tempDivisions = countTempDivisions(tempStart, tempEnd, degrees);
-        List<Double> cpVector = mainVector.cpVector(tempStart, tempEnd, tempDivisions.size());
-        List<Double> enthalpyVector = mainVector.enthalpyVector(tempStart, tempDivisions, cpVector);
-        return new Vector(tempDivisions, cpVector, enthalpyVector);
+    private static Vector getTransitionVector(Vector mainVector, double tempStart, double tempEnd) {
+        int startIndex = mainVector.getIndex(tempStart);
+        int endIndex = mainVector.getIndex(tempEnd);
+        List<Double> tempVector = mainVector.getTemperature().subList(startIndex,endIndex);
+        List<Double> cpVector = mainVector.getCp().subList(startIndex, endIndex);
+        List<Double> enthalpyVector = mainVector.getEnthalpy().subList(startIndex, endIndex);
+        return new Vector(tempVector, cpVector, enthalpyVector);
     }
 
 }

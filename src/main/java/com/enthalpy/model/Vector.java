@@ -26,6 +26,7 @@ public class Vector {
     public Vector(List<Double> temperature, List<Double> cp) {
         this.temperature = temperature;
         this.cp = cp;
+        applyLagrange();
         countEnthalpy();
     }
 
@@ -73,8 +74,8 @@ public class Vector {
         if (null == vector) {
             return;
         }
-        removeVector(startIndex, endIndex);
-        addVector(startIndex, vector);
+        //removeVector(startIndex, endIndex);
+        //addVector(startIndex, vector);
         updateEnthalpy(endIndex);
 
     }
@@ -103,18 +104,6 @@ public class Vector {
         }
     }
 
-    public List<Double> cpVector(double tempStart, double tempEnd, int size) {
-        int startIndex = this.getIndex(tempStart);
-        int endIndex = this.getIndex(tempEnd);
-        double cp = (this.cp.get(startIndex) + this.cp.get(endIndex)) / 2;
-        List<Double> cpVector = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            cpVector.add(cp);
-        }
-        return cpVector;
-    }
-
-
     public int getIndex(double temp) {
         int index = Collections.binarySearch(this.getTemperature(), temp);
         if (index < 0) {
@@ -122,22 +111,28 @@ public class Vector {
         }
         return index;
     }
-    public double lagrange( double arg)
+    public double lagrange(double arg, int index)
     {
+        List<Double> temp = new ArrayList<>();
+        temp.add(this.temperature.get(index));
+        temp.add(this.temperature.get(index + 1));
+        List<Double> cp = new ArrayList<>();
+        cp.add(this.cp.get(index));
+        cp.add(this.cp.get(index + 1));
         double counted=0;
-        for (int i=0;i<this.temperature.size();i++)
+        for (int i=0;i<temp.size();i++)
         {
             double li=1;
-            for (int j=0;j<this.temperature.size();j++)
+            for (int j=0;j<temp.size();j++)
             {
 
                 if (i!=j)
                 {
-                    li*=(arg-this.temperature.get(j))/(this.temperature.get(i)-this.temperature.get(j));
+                    li*=(arg-temp.get(j))/(temp.get(i)-temp.get(j));
 
                 }
             }
-            counted+=this.cp.get(i)*li;
+            counted+=cp.get(i)*li;
 
         }
 
@@ -206,20 +201,16 @@ public class Vector {
     {
         List<Double> newtemp=new ArrayList<>();
         List<Double> newcp = new ArrayList<>();
-
-        double temp=this.temperature.get(0);
-        while (temp<=this.temperature.get(this.temperature.size()-1))
-        {
-            newtemp.add(temp);
-            newcp.add(lagrange(temp));
-            temp=temp+1;
+        for (int i=0;i<this.temperature.size();i++) {
+            double temp = this.temperature.get(i);
+            while (temp < this.temperature.get(this.temperature.size() - 1) && temp <= this.temperature.get(i+1)) {
+                newtemp.add(temp);
+                newcp.add(lagrange(temp,i));
+                temp = temp + 1;
+            }
         }
         this.temperature=newtemp;
         this.cp=newcp;
-        System.out.println(newcp.size());
-        System.out.println(newtemp.size());
-        countEnthalpy();
-        System.out.println(this.enthalpy.size());
     }
 
     public static Scanner getScanner(String path) {

@@ -20,7 +20,6 @@ public class Main {
         //Drukuję początkowy wektor
         System.out.println("Wektor początkowy");
         vector.printVector();
-        vector.applyLagrange();
         System.out.println("Stosowanie lagrangea");
         vector.printVector();
         double tempStart = 1420.;
@@ -29,7 +28,7 @@ public class Main {
         Vector transitionVector = Enthalpy.transitionVector(vector, tempStart, tempEnd, H, "linear");
         vector.insertVector(vector.getIndex(tempStart), vector.getIndex(tempEnd),transitionVector);
         System.out.println("Wektor po pierwszej przemianie");
-        vector.printVector();
+        //vector.printVector();
 
         tempStart = 1495.;
         tempEnd = 1520.;
@@ -37,6 +36,6 @@ public class Main {
         transitionVector = Enthalpy.transitionVector(vector, tempStart, tempEnd, H, "exponential");
         vector.insertVector(vector.getIndex(tempStart), vector.getIndex(tempEnd),transitionVector);
         System.out.println("Wektor po dwóch przemianach");
-        vector.printVector();
+        //vector.printVector();
     }
 }

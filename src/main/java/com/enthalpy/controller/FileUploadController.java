@@ -94,7 +94,6 @@ public class FileUploadController {
         model.addAttribute("tempJson", vector.getTemperatureAsJsonObject());
         model.addAttribute("enthalpyJson", vector.getEnthalpyAsJsonObject());
         model.addAttribute("form", form);
-        //model.addAttribute("vector", vector);
     }
 
     private void addErrors(TransitionForm form, BindingResult bindingResult, Vector vector) {
